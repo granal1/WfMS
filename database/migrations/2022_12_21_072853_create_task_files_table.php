@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignUuid('task_uuid');
 //            $table->foreignUuid('file_uuid');
 
-            $table->string('file_uuid', 36)->nullable()->default(null);
-            $table->string('outgoing_file_uuid', 36)->nullable()->default(null);
+            $table->foreignUuid('file_uuid', 36)->nullable()->default(null);
+            $table->foreignUuid('outgoing_file_uuid', 36)->nullable()->default(null);
             $table->string('comment')->nullable()->default(null);
             $table->integer('sort_order')->nullable()->default(1);
             $table->timestamps();

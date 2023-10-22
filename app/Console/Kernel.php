@@ -95,11 +95,14 @@ class Kernel extends ConsoleKernel
             if ($oldest_date < $check_date) {
                 while ($oldest_date < $check_date) {
                     Log::info('Перенос в архив ВХОДЯЩИХ за '. $oldest_date);
-                    DB::statement('CREATE TABLE if not exists ' . $archive_table . ' LIKE files');
+                    // DB::statement('CREATE TABLE if not exists ' . $archive_table . ' LIKE files'); //TODO Работало на MySql 
+                    DB::statement('CREATE TABLE if not exists ' . $archive_table . ' (LIKE files)');
                     try {
                         DB::beginTransaction();
-                        DB::statement('INSERT INTO `' .$archive_table. '` (SELECT * FROM `files` WHERE `incoming_at`= "' .$oldest_date. '")');
-                        DB::statement('DELETE FROM `files` WHERE `incoming_at`= "' .$oldest_date. '"');
+                        // DB::statement('INSERT INTO `' .$archive_table. '` (SELECT * FROM `files` WHERE `incoming_at`= "' .$oldest_date. '")');   //TODO Работало на MySql 
+                        // DB::statement('DELETE FROM `files` WHERE `incoming_at`= "' .$oldest_date. '"');                                          //TODO Работало на MySql 
+                        DB::statement("INSERT INTO " . $archive_table . " (SELECT * FROM files WHERE incoming_at = '" . $oldest_date . "%')");
+                        DB::statement("DELETE FROM files WHERE incoming_at = '" . $oldest_date . "%'");
                         DB::commit();
                     }
                     catch (\Exception $e) {
@@ -118,11 +121,14 @@ class Kernel extends ConsoleKernel
             if ($oldest_date < $check_date) {
                 while ($oldest_date < $check_date) {
                     Log::info('Перенос в архив ИСХОДЯЩИХ за '. $oldest_date);
-                    DB::statement('CREATE TABLE if not exists ' . $archive_table . ' LIKE outgoing_files');
+                    // DB::statement('CREATE TABLE if not exists ' . $archive_table . ' LIKE outgoing_files'); //TODO Работало на MySql 
+                    DB::statement('CREATE TABLE if not exists ' . $archive_table . ' (LIKE outgoing_files)');
                     try {
                         DB::beginTransaction();
-                        DB::statement('INSERT INTO `' .$archive_table. '` (SELECT * FROM `outgoing_files` WHERE `outgoing_at`= "' .$oldest_date. '")');
-                        DB::statement('DELETE FROM `outgoing_files` WHERE `outgoing_at`= "' .$oldest_date. '"');
+                        // DB::statement('INSERT INTO `' .$archive_table. '` (SELECT * FROM `outgoing_files` WHERE `outgoing_at`= "' .$oldest_date. '")');  //TODO Работало на MySql 
+                        // DB::statement('DELETE FROM `outgoing_files` WHERE `outgoing_at`= "' .$oldest_date. '"');                                         //TODO Работало на MySql 
+                        DB::statement("INSERT INTO " . $archive_table . " (SELECT * FROM outgoing_files WHERE outgoing_at = '" . $oldest_date . "%')");
+                        DB::statement("DELETE FROM outgoing_files WHERE outgoing_at = '" . $oldest_date . "%'");
                         DB::commit();
                     }
                     catch (\Exception $e) {
@@ -136,6 +142,7 @@ class Kernel extends ConsoleKernel
             }
         })        
         ->dailyAt('00:30');
+         // ->hourlyAt(42);
 
 
         //__________________________

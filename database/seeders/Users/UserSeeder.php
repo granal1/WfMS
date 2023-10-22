@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'id' => '1a80b3d0-89b8-40d8-8e85-cb643f022fb9',
-                'superior_uuid' => '',
+                'superior_uuid' => '1a80b3d0-89b8-40d8-8e85-cb643f022fb9', //TODO вариант '' на Postgresql не работает
                 'name' => 'Иван Иванович',
                 'email' => 'boss@boss.ru',
                 'phone' => '999-816-45-84',

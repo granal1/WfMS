@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Logs;
 
 use App\Http\Controllers\Controller;
 use App\Models\Logs\LogTask;
-use Illuminate\Support\Facades\Log;
+
 
 class LogsController extends Controller
 {
@@ -21,9 +21,10 @@ class LogsController extends Controller
         return view('logs.index')->with(['logs' => $logs]);
     }
 
-    public function show(LogTask $log)
+    public function show($id)
     {
-        return view('logs.show')->with(['log' => $log]);
+
+        return view('logs.show')->with(['log' => LogTask::where('id', $id)]);
     }
 
     /**
@@ -34,16 +35,7 @@ class LogsController extends Controller
      */
     public function destroy($id)
     {
-        if (LogTask::destroy($id)) {
-            return response()->json([
-                'message' => 'log deleted',
-                'status_code' => 200
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'log deleted error',
-                'status_code' => 500
-            ], 500);
-        }
+        LogTask::where('id', $id)->delete();
+        return redirect()->route('logs.index');
     }
 }

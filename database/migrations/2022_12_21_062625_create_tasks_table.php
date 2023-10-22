@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('parent_uuid', 36)->nullable()->default(null);
+            $table->foreignUuid('parent_uuid', 36)->nullable()->default(null);
 
             $table->foreignUuid('priority_uuid');
             $table->foreignUuid('author_uuid');

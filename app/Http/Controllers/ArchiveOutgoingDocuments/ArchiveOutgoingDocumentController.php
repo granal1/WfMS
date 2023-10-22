@@ -26,6 +26,7 @@ use DateTime;
 class ArchiveOutgoingDocumentController extends Controller
 {
     public $archive_list = [];
+    private $archiveService;
 
     public function __construct()
     {
@@ -108,7 +109,7 @@ class ArchiveOutgoingDocumentController extends Controller
 
         foreach($yearService->getYearsList() as $year)
         {
-            $years[] = $year;
+            $years[] = $year->outgoing_at;
         }
 
         foreach ($this->archiveService->getYearsList() as $year)

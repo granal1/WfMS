@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('log_task', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('task_uuid', 36);
-            $table->string('parent_uuid', 36)->nullable()->default(null);
-            $table->string('priority_uuid', 36)->nullable()->default(null);
+            $table->foreignUuid('task_uuid', 36);
+            $table->foreignUuid('parent_uuid', 36)->nullable()->default(null);
+            $table->foreignUuid('priority_uuid', 36)->nullable()->default(null);
             $table->foreignUuid('author_uuid');
-            $table->string('responsible_uuid', 36);
+            $table->foreignUuid('responsible_uuid', 36);
             $table->text('description');
             $table->timestamp('deadline_at');
             $table->integer('done_progress')->nullable()->default(null);
