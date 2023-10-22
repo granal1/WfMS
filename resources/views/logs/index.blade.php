@@ -20,14 +20,6 @@
         </div>
         <div class="card-body">
             <div class="row pt-3">
-                <div id="successMessage" style="display:none" class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Лог успешно удалён</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div id="errorMessage" style="display:none" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Ошибка удаления</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
                 <div class="col">
                     <table class="table table-sm table-hover table-striped">
                         <thead>
@@ -35,25 +27,24 @@
                                 <th class="d-none d-sm-table-cell">id</th>
                                 <th class="d-none d-sm-table-cell">task_uuid</th>
                                 <th class="d-none d-sm-table-cell">parent_uuid</th>
-                                <th class="d-none d-md-table-cell">Автор</th>
-                                <th class="d-none d-sm-table-cell">Ответственный</th>
-                                <th class="d-none d-sm-table-cell">Описание</th>
-                                <th class="d-none d-md-table-cell">Выполнить до</th>
-                                <th class="d-none d-sm-table-cell">Исп., %</th>
-                                <th class="d-none d-sm-table-cell">Описание</th>
-                                <th class="d-none d-md-table-cell">Отчет</th>
-                                <th class="d-none d-sm-table-cell">Комментарий</th>
-                                <th class="d-none d-md-table-cell">Создана</th>
-                                <th class="d-none d-sm-table-cell">Обновлена</th>
-                                <th class="d-none d-sm-table-cell">Удалена</th>
-                                <th class="d-none d-sm-table-cell">Лог</th>
+                                <th class="d-none d-md-table-cell">author_uuid</th>
+                                <th class="d-none d-sm-table-cell">responsible_uuid</th>
+                                <th class="d-none d-sm-table-cell">description</th>
+                                <th class="d-none d-md-table-cell">deadline_at</th>
+                                <th class="d-none d-sm-table-cell">done_progress</th>
+                                <th class="d-none d-sm-table-cell">report</th>
+                                <th class="d-none d-md-table-cell">sort_order</th>
+                                <th class="d-none d-sm-table-cell">comment</th>
+                                <th class="d-none d-md-table-cell">created_at</th>
+                                <th class="d-none d-sm-table-cell">updated_at</th>
+                                <th class="d-none d-sm-table-cell">deleted_at</th>
+                                <th class="d-none d-sm-table-cell">Удалить</th>
 
                             </tr>
                         </thead>
                         <tbody style="cursor: pointer;">
-                            @csrf
                             @forelse($logs as $log)
-                            <tr id="{{$log->id}}" onclick="window.location='{{ route('logs.show', $log->id) }}';">
+                                    <tr onclick="window.location='{{ route('logs.show', $log->id) }}';">
                                         <td class="d-none d-sm-table-cell">{{$log->id}}</td>
                                         <td class="d-none d-sm-table-cell">{{$log->task_uuid}}</td>
                                         <td class="d-none d-sm-table-cell">{{$log->parent_uuid}}</td>
@@ -68,12 +59,12 @@
                                         <td class="d-none d-md-table-cell">{{$log->created_at}}</td>
                                         <td class="d-none d-sm-table-cell">{{$log->updated_at}}</td>
                                         <td class="d-none d-sm-table-cell">{{$log->deleted_at}}</td>
-                                        <td class="d-none d-sm-table-cell">
-                                            <button data-id="{{$log->id}}" class="btn btn-danger btn-sm"
-                                            onclick="deleteLog('{{$log->id}}')">Удалить
-                                        </button>
-                                        
-                                        </td>
+                                        <td class="d-none d-sm-table-cell"><form action="{{ url('/logs', ['log' => $log->id]) }}" method="post">
+                                                <input class="btn btn-outline-danger btn-sm" type="submit" value="Удалить"/>
+                                               
+                                                @csrf
+                                                @method('delete')
+                                            </form></td>
                                     </tr>
                             @empty
                             <tr>
@@ -90,33 +81,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-async function deleteLog(id)
-{
-const csrfToken = document.querySelector("[name~=_token]").value;
-
-let response = await fetch('/logs/' + id,
-{
-    method: 'DELETE',
-    headers: {
-            "X-CSRF-Token": csrfToken
-        }
-}).then(response => {
-        let elem = document.getElementById(id);
-        elem.remove();
-        let messageElement = document.getElementById('successMessage');
-        messageElement.style.display = "block";
-        return response.text();
-    })
-    .then(text => {
-        return console.log(text);
-    })
-    .catch(error => {
-        console.error(error);
-        let messageElement = document.getElementById('errorMessage');
-        messageElement.style.display = "block";
-    });;
- }
-    </script>
     @endsection
